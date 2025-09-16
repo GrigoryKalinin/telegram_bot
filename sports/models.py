@@ -5,13 +5,7 @@ class Sport(models.Model):
     name = models.CharField(max_length=100, db_index=True, verbose_name="Вид спорта")
     description = models.TextField(max_length=1000, verbose_name="Описание", blank=True)
     available = models.BooleanField(default=True, verbose_name="Доступность")
-    is_paid = models.BooleanField(default=False, verbose_name="Платно")
-    price = models.IntegerField(verbose_name="Цена", blank=True, null=True)
-
-    coach = models.ManyToManyField("Coach", verbose_name="Тренер", blank=True)
-    place = models.ManyToManyField("Place", verbose_name="Место", blank=True)
-    district = models.ManyToManyField("District", verbose_name="Район", blank=True)
-
+    
     def __str__(self) -> str:
         return str(self.name)
 
@@ -32,8 +26,7 @@ class Place(models.Model):
     name = models.CharField(max_length=100, db_index=True, verbose_name="Место")
     description = models.TextField(max_length=1000, verbose_name="Описание", blank=True)
     available = models.BooleanField(default=True, verbose_name="Доступность")
-
-    coach = models.ManyToManyField(Coach, verbose_name="Тренер", blank=True)
+    district = models.ForeignKey('District', on_delete=models.CASCADE, verbose_name="Район")
 
     def __str__(self) -> str:
         return str(self.name)
@@ -43,8 +36,23 @@ class District(models.Model):
     name = models.CharField(max_length=100, db_index=True, verbose_name="Район")
     available = models.BooleanField(default=True, verbose_name="Доступность")
 
-    place = models.ForeignKey(Place, verbose_name="Место", on_delete=models.CASCADE)
-    coach = models.ManyToManyField(Coach, verbose_name="Тренер", blank=True)
-
     def __str__(self) -> str:
         return str(self.name)
+
+
+class SportPlace(models.Model):
+    sport = models.ForeignKey(Sport, on_delete=models.CASCADE)
+    place = models.ForeignKey(Place, on_delete=models.CASCADE)
+    price = models.IntegerField(verbose_name="Цена", blank=True, null=True)
+    is_paid = models.BooleanField(default=False, verbose_name="Платно")
+    
+    def __str__(self) -> str:
+        return f"{self.sport} - {self.place}"
+
+
+class CoachSportPlace(models.Model):
+    coach = models.ForeignKey(Coach, on_delete=models.CASCADE)
+    sport_place = models.ForeignKey(SportPlace, on_delete=models.CASCADE)
+    
+    def __str__(self) -> str:
+        return f"{self.coach} - {self.sport_place}"
