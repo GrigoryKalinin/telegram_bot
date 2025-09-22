@@ -30,3 +30,16 @@ class PlaceAdmin(admin.ModelAdmin):
     search_fields = ['name']
     list_editable = ['available']
     list_filter = ['district']
+
+@admin.register(SportPlace)
+class SportPlaceAdmin(admin.ModelAdmin):
+    list_display = ['sport', 'place', 'price', 'is_paid']
+    search_fields = ['sport', 'place']
+    list_editable = ['is_paid']
+    list_filter = ['sport', 'place']
+
+@admin.register(CoachSportPlace)
+class CoachSportPlaceAdmin(admin.ModelAdmin):
+    list_display = ['coach', 'sport_place']
+    search_fields = ['coach', 'sport_place']
+    list_filter = ['coach', 'sport_place']
