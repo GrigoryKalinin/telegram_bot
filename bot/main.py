@@ -1,9 +1,19 @@
+import os
+import sys
+import django
+from dotenv import load_dotenv
+
+# Добавляем корневую папку проекта в путь
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(BASE_DIR)
+# Настройка Django
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
+django.setup()
+
 import telebot
 from telebot import types
-import sqlite3
+from sports.models import Sport, Coach, Place, District, SportPlace, CoachSportPlace
 
-import os
-from dotenv import load_dotenv
 
 load_dotenv()
 TG_BOT = os.getenv('TELEGRAM_BOT')
